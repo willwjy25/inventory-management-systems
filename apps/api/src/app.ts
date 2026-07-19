@@ -2,14 +2,18 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 
-import type { ApiSuccessResponse } from '@ims/types';
-
 import { env } from './config/env.js';
+import { errorHandler } from './middlewares/error-handler.middleware.js';
+import { notFoundHandler } from './middlewares/not-found.middleware.js';
 import { healthRouter } from './routes/health.routes.js';
+import { sendSuccess } from './utils/api-response.js';
 
 /**
  * Application factory — keeps bootstrap (index.ts) separate from
  * middleware composition so tests can create an app without listening.
+ *
+ * Middleware order matters:
+ *   security → parsers → routes → 404 → error handler
  */
 export function createApp() {
   const app = express();
@@ -26,17 +30,18 @@ export function createApp() {
   app.use('/health', healthRouter);
 
   app.get('/', (_req, res) => {
-    const body: ApiSuccessResponse<{ name: string; version: string }> = {
-      success: true,
-      message: 'Inventory Management System API',
-      data: {
+    sendSuccess(
+      res,
+      {
         name: 'ims-api',
         version: '0.0.0',
       },
-    };
-
-    res.status(200).json(body);
+      'Inventory Management System API',
+    );
   });
+
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   return app;
 }

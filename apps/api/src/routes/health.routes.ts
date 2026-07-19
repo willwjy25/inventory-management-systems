@@ -1,18 +1,30 @@
 import { Router } from 'express';
 
-import type { ApiSuccessResponse } from '@ims/types';
+import { ServiceUnavailableError } from '../common/errors/app-error.js';
+import { prisma } from '../lib/prisma.js';
+import { asyncHandler } from '../middlewares/async-handler.js';
+import { sendSuccess } from '../utils/api-response.js';
 
 export const healthRouter = Router();
 
-healthRouter.get('/', (_req, res) => {
-  const body: ApiSuccessResponse<{ status: string; uptime: number }> = {
-    success: true,
-    message: 'OK',
-    data: {
-      status: 'healthy',
-      uptime: process.uptime(),
-    },
-  };
+healthRouter.get(
+  '/',
+  asyncHandler(async (_req, res) => {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+    } catch (error: unknown) {
+      // Original error kept as cause for server logs; client only sees the message.
+      throw new ServiceUnavailableError('Database connection failed', error);
+    }
 
-  res.status(200).json(body);
-});
+    sendSuccess(
+      res,
+      {
+        status: 'healthy' as const,
+        uptime: process.uptime(),
+        database: 'up' as const,
+      },
+      'OK',
+    );
+  }),
+);
