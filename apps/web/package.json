@@ -15,11 +15,16 @@
     "clean": "rimraf .next .turbo"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@ims/types": "workspace:*",
     "@ims/ui": "workspace:*",
+    "@tanstack/react-query": "^5.101.2",
+    "axios": "^1.18.1",
     "next": "^15.2.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.82.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@ims/eslint-config": "workspace:*",

@@ -54,6 +54,7 @@ pnpm dev
 ```
 
 - Web: http://localhost:3000
+- Login: http://localhost:3000/login
 - API: http://localhost:4000
 - Health: http://localhost:4000/health
 - Postgres: local `localhost:5432` → database `ims_inventory`
