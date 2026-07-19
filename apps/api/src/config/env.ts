@@ -1,6 +1,5 @@
 /**
  * Typed environment access.
- * Secrets and DB URLs will be added when auth/Prisma features land.
  * Fail fast on missing required values — never silently run misconfigured.
  */
 
@@ -18,4 +17,5 @@ export const env = {
   NODE_ENV: process.env.NODE_ENV ?? 'development',
   PORT: Number(process.env.PORT ?? 4000),
   WEB_ORIGIN: requireEnv('WEB_ORIGIN', 'http://localhost:3000'),
+  DATABASE_URL: requireEnv('DATABASE_URL'),
 } as const;

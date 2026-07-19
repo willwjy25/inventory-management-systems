@@ -1,7 +1,6 @@
 /**
  * Shared domain contracts.
- * Domain-specific types (User, Product, etc.) will be added in later features.
- * Keep this package free of runtime business logic.
+ * Keep this package free of runtime business logic — types and constants only.
  */
 
 /** Standard API success envelope used by apps/api and consumed by apps/web */
@@ -25,5 +24,12 @@ export interface ApiFieldError {
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
-/** Application roles — aligned with RBAC requirements */
-export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'STAFF';
+/** Application role names — must match `roles.name` in the database */
+export const USER_ROLES = ['SUPER_ADMIN', 'ADMIN', 'STAFF'] as const;
+export type UserRole = (typeof USER_ROLES)[number];
+
+export const PRODUCT_STATUSES = ['ACTIVE', 'INACTIVE'] as const;
+export type ProductStatus = (typeof PRODUCT_STATUSES)[number];
+
+export const INVENTORY_TRANSACTION_TYPES = ['IN', 'OUT', 'ADJUSTMENT'] as const;
+export type InventoryTransactionType = (typeof INVENTORY_TRANSACTION_TYPES)[number];

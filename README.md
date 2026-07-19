@@ -24,12 +24,13 @@ packages/
 | Tooling | pnpm workspaces, Turborepo, TypeScript strict, ESLint, Prettier, Husky |
 | API     | Node.js, Express, Prisma (next), JWT + RBAC (next)                     |
 | Web     | Next.js, React, TanStack Query (next), Axios (next), RHF + Zod (next)  |
-| Data    | PostgreSQL (next)                                                      |
+| Data    | PostgreSQL + Prisma Migrate / Seed                                     |
 
 ## Prerequisites
 
 - Node.js **≥ 20**
 - [pnpm](https://pnpm.io/) **9.x** (this repo pins `packageManager`)
+- Local **PostgreSQL 14+** running on port `5432`
 
 ## Getting started
 
@@ -37,9 +38,16 @@ packages/
 # Install dependencies (from repo root)
 pnpm install
 
-# Copy env examples
+# Create the database once (psql)
+psql -U postgres -c "CREATE DATABASE ims_inventory;"
+
+# Copy env examples and set DATABASE_URL in apps/api/.env
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
+
+# Generate Prisma client, run migrations, seed demo data
+pnpm --filter @ims/api db:migrate
+pnpm --filter @ims/api db:seed
 
 # Run all apps in development
 pnpm dev
@@ -48,6 +56,15 @@ pnpm dev
 - Web: http://localhost:3000
 - API: http://localhost:4000
 - Health: http://localhost:4000/health
+- Postgres: local `localhost:5432` → database `ims_inventory`
+
+### Seed accounts (local only)
+
+| Email                  | Password       | Role        |
+| ---------------------- | -------------- | ----------- |
+| `superadmin@ims.local` | `Password123!` | SUPER_ADMIN |
+| `admin@ims.local`      | `Password123!` | ADMIN       |
+| `staff@ims.local`      | `Password123!` | STAFF       |
 
 ## Scripts
 
