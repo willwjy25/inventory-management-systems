@@ -33,3 +33,17 @@ export type ProductStatus = (typeof PRODUCT_STATUSES)[number];
 
 export const INVENTORY_TRANSACTION_TYPES = ['IN', 'OUT', 'ADJUSTMENT'] as const;
 export type InventoryTransactionType = (typeof INVENTORY_TRANSACTION_TYPES)[number];
+
+/** Public user shape returned by auth endpoints (never includes password) */
+export interface AuthUserDto {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+export interface AuthLoginData {
+  accessToken: string;
+  user: AuthUserDto;
+}

@@ -4,6 +4,6 @@ import nodeConfig from '@ims/eslint-config/node';
 export default [
   ...nodeConfig,
   {
-    ignores: ['src/generated/**', 'prisma/migrations/**'],
+    ignores: ['src/generated/**', 'prisma/migrations/**', '**/*.d.ts'],
   },
 ];

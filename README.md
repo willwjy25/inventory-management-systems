@@ -66,6 +66,15 @@ pnpm dev
 | `admin@ims.local`      | `Password123!` | ADMIN       |
 | `staff@ims.local`      | `Password123!` | STAFF       |
 
+### Auth endpoints
+
+| Method | Path            | Notes                                              |
+| ------ | --------------- | -------------------------------------------------- |
+| POST   | `/auth/login`   | Returns access token; sets HttpOnly refresh cookie |
+| POST   | `/auth/refresh` | Rotates refresh cookie; returns new access token   |
+| POST   | `/auth/logout`  | Revokes refresh session; clears cookie             |
+| GET    | `/auth/me`      | Requires `Authorization: Bearer <accessToken>`     |
+
 ## Scripts
 
 | Command          | Description                                     |

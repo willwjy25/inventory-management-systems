@@ -37,20 +37,38 @@ model Role {
 }
 
 model User {
-  id           String                  @id @default(cuid())
-  name         String
-  email        String                  @unique
-  password     String /// bcrypt hash — never store plaintext
-  roleId       String
-  role         Role                    @relation(fields: [roleId], references: [id])
-  isActive     Boolean                 @default(true)
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
-  transactions InventoryTransaction[]
+  id            String                  @id @default(cuid())
+  name          String
+  email         String                  @unique
+  password      String /// bcrypt hash — never store plaintext
+  roleId        String
+  role          Role                    @relation(fields: [roleId], references: [id])
+  isActive      Boolean                 @default(true)
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  transactions  InventoryTransaction[]
+  refreshTokens RefreshToken[]
 
   @@index([roleId])
   @@index([isActive])
   @@map("users")
+}
+
+/// Persisted refresh sessions enable logout/revoke. Store only a hash of the token.
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  userAgent String?
+  ipAddress String?
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
 }
 
 // ─── Catalog ─────────────────────────────────────────────────────────────────
